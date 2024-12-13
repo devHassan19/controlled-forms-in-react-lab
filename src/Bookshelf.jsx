@@ -1,40 +1,59 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-const [books, setBooks] = useState([
-  { title: 'Fourth Wing', author: 'Rebecca Yarros' },
-  { title: 'The Lion, the Witch and the Wardrobe', author: 'C.S. Lewis' }
-])
+const Bookshelf = ({ addBook }) => {
+  const [books, setBooks] = useState([
+    { title: 'Fourth Wing', author: 'Rebecca Yarros' },
+    { title: 'The Lion, the Witch and the Wardrobe', author: 'C.S. Lewis' }
+  ])
 
-const handleInputChange = (event) => {
-  setFormData({ ...formData, [event.target.name]: event.target.value })
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: ''
+  })
+
+  const handleInputChange = (event) => {
+    setNewBook({ ...newBook, [event.target.name]: event.target.value })
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setBooks((prevBooks) => [...prevBooks, newBook])
+    setNewBook({ title: '', author: '' })
+  }
+
+  return (
+    <div className="bookshelfDiv">
+      <div className="formDiv">
+        <h3>Add a Book</h3>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="title">Title: </label>
+          <input
+            className="input"
+            type="text"
+            name="title"
+            value={newBook.title}
+            onChange={handleInputChange}
+          />
+          <label htmlFor="author">Author: </label>
+          <input
+            type="text"
+            name="author"
+            value={newBook.author}
+            onChange={handleInputChange}
+          />
+          <button type="submit">Add Book</button>
+        </form>
+      </div>
+      <div className="bookCardsDiv">
+        {books.map((book, index) => (
+          <div key={index} className="bookCard">
+            <h4>{book.title}</h4>
+            <h6> by {book.author}</h6>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
-const handleSubmit = (event) => {
-  event.preventDefault()
-  setTitle(`Your name is: ${formData.firstName} ${formData.lastName}`)
-  setFormData({ firstName: '', lastName: '' })
-}
-
-;<div className="bookshelfDiv">
-  <div className="formDiv">
-    <h3>Add a Book</h3>
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="firstName">First Name: </label>
-      <input
-        id="firstName"
-        name="firstName"
-        value={formData.firstName}
-        onChange={handleChange}
-      />
-      <label htmlFor="lastName">Last Name: </label>
-      <input
-        id="lastName"
-        name="lastName"
-        value={formData.lastName}
-        onChange={handleChange}
-      />
-      <button type="submit">Submit your name</button>
-    </form>
-  </div>
-  <div className="bookCardsDiv">{/* Book cards will display here */}</div>
-</div>
+export default Bookshelf
